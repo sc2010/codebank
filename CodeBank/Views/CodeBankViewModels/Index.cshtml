@@ -1,10 +1,16 @@
-﻿@model IEnumerable<CodeBank.Models.Messages>
+﻿@model CodeBank.ViewModels.CodebankViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Codebank</h2>
+<form action="/CodeBankViewModels/Search">
+    Search: <br />
+    <input type="text" name="value" />
+    <input type="submit" value="Find" />
+</form>
+
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,41 +19,42 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Link)
+                Link
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+               Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Description
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.KeyWords)
+                KeyWords
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Link)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KeyWords)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Code)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Link)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KeyWords)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

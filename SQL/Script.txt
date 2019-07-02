@@ -1,0 +1,1 @@
+CREATE TABLE `devel_codebank`.`codes` ( `Id` BIGINT NOT NULL AUTO_INCREMENT, `Link` VARCHAR(200), `Title` VARCHAR(100), `Description` VARCHAR(500), `KeyWords` VARCHAR(200), PRIMARY KEY (`Id`) ); 

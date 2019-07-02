@@ -13,7 +13,7 @@ namespace CodeBank.Models
         {
         }
 
-        public DbSet<CodeBank.Models.Messages> Messages { get; set; }
+        public DbSet<CodeBank.Models.Code> Code { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CodeBank.Models
 {
-    public class Messages
+    public class Code
     {
         public int Id { get; set; }
 

@@ -21,7 +21,37 @@ namespace CodeBank.Controllers
         // GET: CodeBankViewModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Messages.ToListAsync());
+            var model = new CodeBank.ViewModels.CodebankViewModel()
+            {
+                Code = await _context.Code.ToListAsync()
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Search(string value)
+        {
+            var item = await _context.Code.ToListAsync();
+            if (string.IsNullOrEmpty(value))
+            {
+                var m = new CodeBank.ViewModels.CodebankViewModel()
+                {
+                    Code = item
+                };
+
+                return View("Index", m);
+            }
+
+            var result = item.Where(x => x.KeyWords.ToLower().Contains(value.ToLower()) ||
+                                         x.Title.ToLower().Contains(value)
+            ).ToList();
+            var model = new CodeBank.ViewModels.CodebankViewModel()
+            {
+                Code = result
+            };
+
+
+            return View("Index", model);
         }
 
         // GET: CodeBankViewModels/Details/5
@@ -32,7 +62,7 @@ namespace CodeBank.Controllers
                 return NotFound();
             }
 
-            var codeBankViewModel = await _context.Messages
+            var codeBankViewModel = await _context.Code
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (codeBankViewModel == null)
             {
@@ -53,7 +83,7 @@ namespace CodeBank.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Link,Title,Description,KeyWords")] Messages codeBankViewModel)
+        public async Task<IActionResult> Create([Bind("Id,Link,Title,Description,KeyWords")] Code codeBankViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +102,7 @@ namespace CodeBank.Controllers
                 return NotFound();
             }
 
-            var codeBankViewModel = await _context.Messages.FindAsync(id);
+            var codeBankViewModel = await _context.Code.FindAsync(id);
             if (codeBankViewModel == null)
             {
                 return NotFound();
@@ -85,7 +115,7 @@ namespace CodeBank.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Link,Title,Description,KeyWords")] Messages codeBankViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Link,Title,Description,KeyWords")] Code codeBankViewModel)
         {
             if (id != codeBankViewModel.Id)
             {
@@ -123,7 +153,7 @@ namespace CodeBank.Controllers
                 return NotFound();
             }
 
-            var codeBankViewModel = await _context.Messages
+            var codeBankViewModel = await _context.Code
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (codeBankViewModel == null)
             {
@@ -138,15 +168,15 @@ namespace CodeBank.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var codeBankViewModel = await _context.Messages.FindAsync(id);
-            _context.Messages.Remove(codeBankViewModel);
+            var codeBankViewModel = await _context.Code.FindAsync(id);
+            _context.Code.Remove(codeBankViewModel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CodeBankViewModelExists(int id)
         {
-            return _context.Messages.Any(e => e.Id == id);
+            return _context.Code.Any(e => e.Id == id);
         }
     }
 }

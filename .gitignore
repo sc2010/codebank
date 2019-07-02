@@ -2,3 +2,5 @@
 /CodeBank/bin/*
 /CodeBank/obj/*
 /CodeBank/CodeBank.csproj.user
+/EF_Tester/bin/*
+/EF_Tester/obj/*
