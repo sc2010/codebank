@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CodeBank.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using CodeBank.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace CodeBank
 {
@@ -33,7 +35,12 @@ namespace CodeBank
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Enable cookie authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
 
+            services.AddTransient<IUserService, UserService>();
+            services.AddSession();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<CodeBankContext>(options =>
@@ -55,6 +62,10 @@ namespace CodeBank
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            // Add authentication to request pipeline
+            app.UseAuthentication();
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

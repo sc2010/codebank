@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CodeBank.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CodeBank.Controllers
 {
@@ -12,6 +14,9 @@ namespace CodeBank.Controllers
     {
         public IActionResult Index()
         {
+            string te = HttpContext.Session.GetString("Test");
+
+
             return View();
         }
 

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CodeBank.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using MySqlX.XDevAPI;
 
 namespace CodeBank.Controllers
 {
@@ -18,17 +21,25 @@ namespace CodeBank.Controllers
             _context = context;
         }
 
-        // GET: CodeBankViewModels
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var model = new CodeBank.ViewModels.CodebankViewModel()
+            if (!string.IsNullOrEmpty( HttpContext.Session.GetString("username")))
             {
-                Code = await _context.Code.ToListAsync()
-            };
+                var model = new CodeBank.ViewModels.CodebankViewModel()
+                {
+                    Code = await _context.Code.ToListAsync()
+                };
 
-            return View(model);
+                return View(model);
+            }
+
+            return RedirectToAction("Login", "Account");
+
+
         }
 
+        [Authorize]
         public async Task<IActionResult> Search(string value)
         {
             var item = await _context.Code.ToListAsync();
@@ -54,7 +65,7 @@ namespace CodeBank.Controllers
             return View("Index", model);
         }
 
-        // GET: CodeBankViewModels/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -72,7 +83,7 @@ namespace CodeBank.Controllers
             return View(codeBankViewModel);
         }
 
-        // GET: CodeBankViewModels/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -83,6 +94,7 @@ namespace CodeBank.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Link,Title,Description,KeyWords")] Code codeBankViewModel)
         {
             if (ModelState.IsValid)
@@ -94,7 +106,7 @@ namespace CodeBank.Controllers
             return View(codeBankViewModel);
         }
 
-        // GET: CodeBankViewModels/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,6 +127,7 @@ namespace CodeBank.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Link,Title,Description,KeyWords")] Code codeBankViewModel)
         {
             if (id != codeBankViewModel.Id)
@@ -145,7 +158,7 @@ namespace CodeBank.Controllers
             return View(codeBankViewModel);
         }
 
-        // GET: CodeBankViewModels/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -163,7 +176,7 @@ namespace CodeBank.Controllers
             return View(codeBankViewModel);
         }
 
-        // POST: CodeBankViewModels/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
